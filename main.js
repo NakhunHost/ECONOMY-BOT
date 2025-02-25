@@ -154,7 +154,14 @@ const dbUrl = 'mongodb+srv://nakhunxu:mongodb@cluster0.mongodb.net/mydatabase?re
 mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('Connected to MongoDB!'))
     .catch(err => console.log('Error connecting to MongoDB:', err));
-const { Client, GatewayIntentBits } = require('discord.js');
+
+        await addMoney(userId, amount);
+        message.channel.send(`Added ${amount} to your balance!`);
+    }
+});
+
+client.login(process.env.TOKEN);
+const { Client, GatewayIntentBits, InteractionType } = require('discord.js');
 const { addMoney, getBalance } = require('./balance');  // Import balance functions
 const mongoose = require('mongoose');
 
@@ -175,31 +182,35 @@ mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
 
 client.once('ready', () => {
     console.log('Bot is online!');
-    // Set status, etc.
+    client.user.setActivity('Playing an Economy Game!', { type: 'PLAYING' });
 });
 
-client.on('messageCreate', async (message) => {
-    if (message.content.startsWith('!balance')) {
-        const userId = message.author.id;
-        const balance = await getBalance(userId);
-        message.channel.send(`Your balance is: ${balance}`);
+client.on('interactionCreate', async (interaction) => {
+    if (!interaction.isCommand()) return;
+
+    const { commandName } = interaction;
+
+    if (commandName === 'balance') {
+        // Get the player's balance
+        const balance = await getBalance(interaction.user.id);
+        await interaction.reply(`Your balance is: ${balance}`);
     }
 
-    if (message.content.startsWith('!addmoney')) {
-        const userId = message.author.id;
-        const amount = parseInt(message.content.split(' ')[1], 10);  // Example: !addmoney 100
-
-        if (isNaN(amount)) {
-            message.channel.send('Please specify a valid amount.');
-            return;
+    if (commandName === 'addmoney') {
+        const amount = interaction.options.getInteger('amount');
+        
+        if (!amount || isNaN(amount)) {
+            return interaction.reply('Please provide a valid amount.');
         }
 
-        await addMoney(userId, amount);
-        message.channel.send(`Added ${amount} to your balance!`);
+        // Add money to the player's balance
+        await addMoney(interaction.user.id, amount);
+        await interaction.reply(`Added ${amount} to your balance!`);
     }
 });
 
 client.login(process.env.TOKEN);
+
 
 
 
