@@ -1,3 +1,4 @@
+require('./server'); // Start keep-alive server for Render
 const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 require('dotenv').config();
