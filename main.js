@@ -114,3 +114,35 @@ client.on('interactionCreate', async (interaction) => {
 
 // Login to Discord
 client.login(process.env.TOKEN);
+const { Client, GatewayIntentBits } = require('discord.js');
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent
+    ]
+});
+
+client.once('ready', () => {
+    console.log('Bot is online!');
+    
+    // Set the custom status here
+    client.user.setActivity('Playing an Economy Game!', { type: 'PLAYING' }); // This sets the status
+
+    // Optional: Cycle through multiple statuses every 10 seconds
+    let statuses = [
+        'Playing an Economy Game!',
+        'Running business simulations...',
+        'Managing your virtual currency!'
+    ];
+    
+    let i = 0;
+    setInterval(() => {
+        client.user.setActivity(statuses[i], { type: 'PLAYING' });
+        i = (i + 1) % statuses.length; // Cycles through the array
+    }, 10000); // Changes status every 10 seconds
+});
+
+// Log in to Discord with your app's token
+client.login(process.env.TOKEN);
+
