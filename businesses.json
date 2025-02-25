@@ -1,0 +1,5 @@
+[
+    { "name": "Lemonade Stand", "price": 500, "earnings": 50 },
+    { "name": "Coffee Shop", "price": 2000, "earnings": 200 },
+    { "name": "Tech Startup", "price": 10000, "earnings": 1000 }
+]
