@@ -114,7 +114,7 @@ client.on('interactionCreate', async (interaction) => {
 
 // Login to Discord
 client.login(process.env.TOKEN);
-const { Client, GatewayIntentBits } = require('discord.js');
+let { Client, GatewayIntentBits } = require('discord.js');
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -145,4 +145,14 @@ client.once('ready', () => {
 
 // Log in to Discord with your app's token
 client.login(process.env.TOKEN);
+const mongoose = require('mongoose');
+
+// Replace the connection string with your MongoDB connection URL
+const dbUrl = 'mongodb+srv://nakhunxu:mongodb@cluster0.mongodb.net/mydatabase?retryWrites=true&w=majority';
+
+// Connect to MongoDB
+mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('Connected to MongoDB!'))
+    .catch(err => console.log('Error connecting to MongoDB:', err));
+
 
