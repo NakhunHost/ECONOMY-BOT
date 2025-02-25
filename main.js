@@ -154,5 +154,52 @@ const dbUrl = 'mongodb+srv://nakhunxu:mongodb@cluster0.mongodb.net/mydatabase?re
 mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('Connected to MongoDB!'))
     .catch(err => console.log('Error connecting to MongoDB:', err));
+const { Client, GatewayIntentBits } = require('discord.js');
+const { addMoney, getBalance } = require('./balance');  // Import balance functions
+const mongoose = require('mongoose');
+
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent
+    ]
+});
+
+// MongoDB connection string from environment variables
+const dbUrl = process.env.MONGO_URI;
+
+mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('Connected to MongoDB!'))
+    .catch(err => console.log('Error connecting to MongoDB:', err));
+
+client.once('ready', () => {
+    console.log('Bot is online!');
+    // Set status, etc.
+});
+
+client.on('messageCreate', async (message) => {
+    if (message.content.startsWith('!balance')) {
+        const userId = message.author.id;
+        const balance = await getBalance(userId);
+        message.channel.send(`Your balance is: ${balance}`);
+    }
+
+    if (message.content.startsWith('!addmoney')) {
+        const userId = message.author.id;
+        const amount = parseInt(message.content.split(' ')[1], 10);  // Example: !addmoney 100
+
+        if (isNaN(amount)) {
+            message.channel.send('Please specify a valid amount.');
+            return;
+        }
+
+        await addMoney(userId, amount);
+        message.channel.send(`Added ${amount} to your balance!`);
+    }
+});
+
+client.login(process.env.TOKEN);
+
 
 
