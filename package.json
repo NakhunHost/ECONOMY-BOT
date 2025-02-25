@@ -1,3 +1,21 @@
-"scripts": {
-    "start": "node main.js"
+{
+  "name": "discord-economy-bot",
+  "version": "1.0.0",
+  "description": "A Discord bot with an economy system using slash commands",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "dev": "nodemon main.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.11.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  },
+  "keywords": ["discord", "bot", "economy", "game"],
+  "author": "Your Name",
+  "license": "MIT"
 }
